@@ -11,8 +11,47 @@
 		"capability": "edit_theme_options"
 	},
 	"sections": {
+		"colors": {
+			"title": "Colors (WP)",
+			"priority": 0,
+			"setting": {
+				"header_text_color": {
+					"label": "Header text color",
+					"type": "color",
+					"default": "#000"
+				},
+				"header_bg_color": {
+					"label": "Header background color",
+					"type": "color",
+					"default": "#000"
+				}
+			}
+		},
+
+		"etc_header": {
+			"title": "Header",
+			"priority": 10,
+			"setting": {
+				"header_logo": {
+					"label": "Logo",
+					"type": "image",
+					"default": ""
+				},
+				"header_show_logo": {
+					"label": "Show logo",
+					"type": "checkbox",
+					"default": true
+				},
+				"header_show_description": {
+					"label": "Show description",
+					"type": "checkbox",
+					"default": true
+				}
+			}
+		},
+
 		"gg_general_settings": {
-			"title": "テキスト系",
+			"title": "General",
 			"priority": 10,
 			"setting": {
 				"general_keywords": {

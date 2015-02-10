@@ -4,7 +4,6 @@
 
 ```
 git clone https://github.com/devyg/extend-theme-customizer.git extend-theme-customizer
-
 ```
 
 ## Usage
