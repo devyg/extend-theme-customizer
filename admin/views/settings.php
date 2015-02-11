@@ -64,7 +64,9 @@ table.widefat{
 							<tr>
 								<th><?php _e( 'Output PHP Tag', 'extend-theme-customizer' ); ?></th>
 								<td>
-								<code>&lt;?php echo esc_html( get_theme_mod( '<?php echo esc_html( $setting_key );  ?>', '<?php echo esc_html( $setting->default );  ?>' ) ); ?&gt;</code></td>
+								<code>&lt;?php etc_get( '<?php echo esc_html( $setting_key );  ?>' ); ?&gt;</code>
+								<code>&lt;?php etc_echo( '<?php echo esc_html( $setting_key );  ?>' ); ?&gt;</code>
+								</td>
 							</tr>
 						</tbody>
 					</table>

@@ -12,7 +12,7 @@
 	},
 	"sections": {
 		"colors": {
-			"title": "Colors (WP)",
+			"title": "Couleurs (WP)",
 			"priority": 0,
 			"setting": {
 				"header_text_color": {
@@ -28,7 +28,7 @@
 			}
 		},
 
-		"etc_header": {
+		"ci_header": {
 			"title": "Header",
 			"priority": 10,
 			"setting": {

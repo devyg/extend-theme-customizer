@@ -30,11 +30,11 @@ define( 'ETC_DEFAULT_JSON', dirname( __FILE__ ) . '/json/theme-customizer-settin
 add_action( 'plugins_loaded', 'etc_load_textdomain' );
 
 function etc_load_textdomain() {
-  load_plugin_textdomain( 'extend-theme-customizer', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+ 	load_plugin_textdomain( 'extend-theme-customizer', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 }
 
 /**
- * Include Class File
+ * Include Classes Files
  * @since 1.0
  */
 
@@ -59,4 +59,44 @@ if ( is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
 
   add_action( 'plugins_loaded', array( 'ETC_Admin', 'get_instance' ) );
 
+}
+
+/**
+ * Get all defaults values
+ * @since 1.1
+ */
+
+function etc_get_default($setting) {
+	$etc = ETC_Theme_Customizer::get_instance();
+	return $etc->get_customizer()->get_default($setting);
+}
+
+/**
+ * Echo a default value
+ * @since 1.1
+ */
+
+function etc_echo_default($setting) {
+	echo esc_html(etc_get_default($setting));
+}
+
+/**
+ * Get a setting value
+ * @since 1.1
+ */
+
+function etc_get($setting) {
+	$etc = ETC_Theme_Customizer::get_instance();
+	$options = get_option($etc->get_customizer()->get_slug(), $etc->get_customizer()->get_defaults());
+
+	return array_key_exists($setting, $options) ? $options[$setting] : etc_get_default($setting);
+}
+
+/**
+ * Echo a setting value
+ * @since 1.1
+ */
+
+function etc_echo($setting) {
+	echo esc_html(etc_get($setting));
 }

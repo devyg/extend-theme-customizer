@@ -21,6 +21,18 @@ class ETC_Theme_Customizer {
 	 * @var [type]
 	 */
 	private static $instance;
+
+	/**
+	 * Customizer
+	 * @var ETC_WP_Theme_Customizer_From_Json
+	 */
+	private $customizer;
+
+	/**
+	 * Settings
+	 * @var object
+	 */
+	private $settings;
 	
 	/**
 	 * construct
@@ -62,10 +74,7 @@ class ETC_Theme_Customizer {
 			}
 		}
 		
-		add_action('init', array(
-			$this,
-			'initialize_customizer'
-		));
+		add_action('init', array( $this, 'initialize_customizer' ));
 		
 	}
 	
@@ -74,16 +83,10 @@ class ETC_Theme_Customizer {
 	 *
 	 * @return object
 	 */
-	
 	public static function get_instance() {
-		
-		// If the single instance hasn't been set, set it now.
 		if (null == self::$instance) {
-			
 			self::$instance = new self;
-			
 		}
-		
 		return self::$instance;
 	}
 	
@@ -97,6 +100,17 @@ class ETC_Theme_Customizer {
 		return $this->plugin_slug;
 		
 	}
+
+	/**
+	 * Get customizer instance
+	 *
+	 * @return string
+	 */
+	public function get_customizer() {
+		
+		return $this->customizer;
+		
+	}
 	
 	/**
 	 * Initialize customizer
@@ -106,10 +120,9 @@ class ETC_Theme_Customizer {
 	public function initialize_customizer() {
 		
 		$setting_id     = array();
-		$customizer     = new ETC_WP_Theme_Customizer_From_Json();
-		$this->settings = $customizer->get_settings();
+		$this->customizer  = new ETC_WP_Theme_Customizer_From_Json();
 		
-		foreach ($this->settings->sections as $section_key => $section) {
+		foreach ($this->customizer->get_settings()->sections as $section_key => $section) {
 			
 			foreach ($section->setting as $setting_key => $setting) {
 				$setting_id[] = $setting_key;

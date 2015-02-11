@@ -54,8 +54,11 @@ class ETC_WP_Theme_Customizer_From_Json {
 		
 		$this->json_path = get_option('etc_json_settings', false);
 		
-		// theme slug
+		// theme name
 		$this->theme_name = $this->get_theme_name();
+
+		// theme slug
+		$this->theme_slug = 'theme_mods_' . $this->theme_name;
 		
 		// register json
 		$this->settings = $this->settings_from_json(apply_filters('etc_json_file', $this->json_path));
@@ -100,7 +103,7 @@ class ETC_WP_Theme_Customizer_From_Json {
 	
 	public function settings_from_json($json_path) {
 		
-		return json_decode(file_get_contents((!$json_path || !$this->json_exists($json_path)) ? ETC_DEFAULT_JSON : $json_path));
+		return json_decode(file_get_contents(($json_path && $this->json_exists($json_path)) ? $json_path : ETC_DEFAULT_JSON));
 		
 	}
 	
@@ -112,6 +115,18 @@ class ETC_WP_Theme_Customizer_From_Json {
 	}
 	
 	/**
+	 * slug getter
+	 *
+	 * @return object
+	 */
+	
+	public function get_slug() {
+		
+		return $this->theme_slug;
+		
+	}
+
+	/**
 	 * settings getter
 	 *
 	 * @return object
@@ -120,6 +135,41 @@ class ETC_WP_Theme_Customizer_From_Json {
 	public function get_settings() {
 		
 		return $this->settings;
+		
+	}
+
+	/**
+	 * default setting getter
+	 *
+	 * @return object
+	 */
+	
+	public function get_default($setting) {
+
+		return $this->get_defaults($setting);
+		
+	}
+
+	/**
+	 * defaults settings getter
+	 *
+	 * @return object
+	 */
+	
+	public function get_defaults($get=false) {
+		$defaults = array();
+		
+		foreach ( $this->settings->sections as $section_key => $settings ) :
+			foreach ( $settings->setting as $setting_key => $setting ):
+				if ($get && $setting_key == $get):
+					return $setting->default ? $setting->default : false;
+				else:
+					$defaults[$setting_key] = $setting->default;
+				endif;
+			endforeach;
+		endforeach;
+
+		return $get ? false : $defaults;
 		
 	}
 	
@@ -144,20 +194,18 @@ class ETC_WP_Theme_Customizer_From_Json {
 			'static_front_page'
 		);
 
-		foreach($this->settings->wp_defaults as $def => $value) {
+		foreach($this->settings->wp_defaults as $def => $value):
 			if (!$value)
 				$this->wp_customize->remove_section($def);
-		}
+		endforeach;
 		
 		// now add new settings
-		
-		$this->theme_slug = 'theme_mods_' . $this->theme_name;
 		
 		foreach ($this->settings->sections as $section_name => $section):
 			// register section
 			if(!in_array($section_name, $wp_defaults))
 				$this->add_section($section_name, $section->title, $section->priority);
-			
+
 			foreach ($section->setting as $setting_name => $settings):
 				// register setting
 				$this->add_setting($setting_name, $settings);
@@ -167,7 +215,7 @@ class ETC_WP_Theme_Customizer_From_Json {
 			endforeach;
 		endforeach;
 		
-		do_action('gc_theme_customizer_after', $this->wp_customize);
+		//do_action('etc_customizer_after', $this->wp_customize);
 		
 	}
 	
@@ -226,19 +274,10 @@ class ETC_WP_Theme_Customizer_From_Json {
 			'label',
 			'choices'
 		));
-		
-		if ('image' === $setting_arg['type']
-			|| 'select' === $setting_arg['type']
-			|| 'radio' === $setting_arg['type']
-			|| 'textarea' === $setting_arg['type']
-			|| 'text-editor' === $setting_arg['type']
-			|| 'text' === $setting_arg['type']
-			|| 'checkbox' === $setting_arg['type']) {
-			
-			$setting_arg['type'] = 'option';
-			
-		} else if ('color' === $setting_arg['type']) {
-			$setting_arg['type']              = 'option';
+
+		$setting_arg['type'] = 'option';
+
+		if ('color' === $setting_arg['type']) {
 			$setting_arg['sanitize_callback'] = 'sanitize_hex_color';
 		}
 		
@@ -276,7 +315,7 @@ class ETC_WP_Theme_Customizer_From_Json {
 			$setting_arg['type'] = $settings->type;
 			
 		}
-		
+
 		return $setting_arg;
 		
 	}
@@ -347,11 +386,9 @@ class ETC_WP_Theme_Customizer_From_Json {
 	 */
 	
 	private function add_setting($setting_name, $settings) {
-		
 		$this->wp_customize->add_setting($this->theme_slug . '[' . $setting_name . ']', $this->set_setting($settings));
-		
+
 	}
-	
 	
 	/**
 	 * Add Control to WP Theme Customizer

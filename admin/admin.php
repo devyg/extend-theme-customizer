@@ -51,6 +51,7 @@ class ETC_Admin {
 			$this,
 			'etc_admin_update_option'
 		));
+
 		add_action('admin_init', array(
 			$this,
 			'etc_admin_add_option'
@@ -59,12 +60,11 @@ class ETC_Admin {
 	}
 	
 	/**
-	 * Return an instance of this class.
+	 * Get Instance
 	 *
-	 * @return    object    A single instance of this class.
+	 * @return object
 	 */
 	public static function get_instance() {
-		
 		if (null == self::$instance) {
 			self::$instance = new self;
 		}
@@ -162,8 +162,8 @@ class ETC_Admin {
 	 */
 	public function etc_admin_update_option() {
 		
-		$json_file_path = $_POST && $_POST['etc_json_file'] ?: '';
-		$nonce          = $_POST && $_POST['_wp_nonce'] ?: '';
+		$json_file_path = $_POST && $_POST['etc_json_file'] ? $_POST['etc_json_file'] : '';
+		$nonce          = $_POST && $_POST['_wp_nonce'] ? $_POST['_wp_nonce'] : '';
 		
 		if (wp_verify_nonce($nonce, plugin_basename(__file__)) !== 1) {
 			return false;

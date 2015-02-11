@@ -1,4 +1,4 @@
-# Extend Theme Customizer
+# The Extend Theme Customizer
 
 ## Installation
 
@@ -33,7 +33,19 @@ JSON file : See json/theme-customizer-settings-default.json
 * Dealing with json file not found or not parsed successfully
 * More cleanup
 * Doc
-* More languages (FR ton come)
+* Internationalization
+* Shortcodes ?
+
+## Changelog
+
+### 1.1
+* Beginning to feel more stable
+* Now uses 'option' instead of 'theme_mod'
+* Changed options page with new helpers
+* Added some functions to get default(s)
+
+### 1.0
+* Various fixes and changes after fork
 
 ## Useful
 
