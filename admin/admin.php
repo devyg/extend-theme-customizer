@@ -2,35 +2,26 @@
 if (!defined('WPINC'))
 	exit;
 
-/**
- *  Plugin Admin Panel
- * =====================================================
- * @package    Extend Theme Customizer
- * @author     takashi ishihara
- * @license    GPLv2 or later
- * @link       https://github.com/1shiharaT/extend-theme-customizer
- * =====================================================
- */
-
 class ETC_Admin {
-	
-	const VERSION = '0.1';
 	
 	/**
 	 * Instance of this class.
 	 * @var      object
 	 */
+
 	protected static $instance = null;
 	
 	/**
 	 * Slug of the plugin screen.
 	 * @var      string
 	 */
+
 	protected $plugin_screen_hook_suffix = null;
 	
 	/**
-	 * Initialize
+	 * construct
 	 */
+
 	private function __construct() {
 		
 		$plugin            = ETC_Theme_Customizer::get_instance();
@@ -86,7 +77,7 @@ class ETC_Admin {
 		$screen = get_current_screen();
 		
 		if ($this->plugin_screen_hook_suffix == $screen->id) {
-			wp_enqueue_style($this->plugin_slug . '-admin-styles', plugins_url('assets/css/admin.css', __FILE__), array(), ETC_Admin::VERSION);
+			wp_enqueue_style($this->plugin_slug . '-admin-styles', plugins_url('assets/css/admin.css', __FILE__), array(), ETC_VERSION);
 		}
 		
 	}
@@ -107,7 +98,7 @@ class ETC_Admin {
 		if ($this->plugin_screen_hook_suffix == $screen->id) {
 			wp_enqueue_script($this->plugin_slug . '-admin-script', plugins_url('assets/js/admin.js', __FILE__), array(
 				'jquery'
-			), ETC_Admin::VERSION);
+			), ETC_VERSION);
 		}
 		
 	}

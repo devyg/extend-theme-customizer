@@ -1,23 +1,23 @@
 <?php
 /*
-Plugin Name: Extend Theme Customizer
+Plugin Name: The Extend Theme Customizer
 Plugin URI: https://github.com/devyg/extend-theme-customizer
 Description: Extend Theme Customizer with a JSON file
-Version: 1.0
+Version: 1.1
 Author: Devyg
 Author URI: http://devyg.com/
 GitHub Plugin URI: devyg/extend-theme-customizer
 GitHub Branch: master
 */
 
-if ( ! defined( 'WPINC' ) ) {
-  exit;
-}
+if (!defined('WPINC'))
+	exit;
 
 /**
  * defined Base Dir
  */
 
+define( 'ETC_VERSION', '1.1');
 define( 'ETC_BASE_DIR', dirname( __FILE__ ) );
 define( 'ETC_DEFAULT_JSON', dirname( __FILE__ ) . '/json/theme-customizer-settings-default.json');
 

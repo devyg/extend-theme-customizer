@@ -8,33 +8,25 @@ class ETC_WP_Theme_Customizer_From_Json {
 	 * Theme Customizer Instance
 	 * @var object
 	 */
-	
+
 	private $wp_customize;
 	
 	/**
-	 * theme slug name
+	 * Json File Path
 	 *
 	 * @var string
 	 */
-	
-	private $theme_name = '';
-	
+
+	private $json_path;
+
 	/**
-	 * Set Json File Path
-	 *
-	 * @var string
-	 */
-	
-	private $json_path = '';
-	
-	/**
-	 * set settings object
+	 * Settings object
 	 *
 	 * @var objecct
 	 */
-	
+
 	private $settings;
-	
+
 	/**
 	 * Theme Slug
 	 * @var string
@@ -45,23 +37,20 @@ class ETC_WP_Theme_Customizer_From_Json {
 	/**
 	 * construct
 	 *
-	 * @param string $json_path
-	 *
 	 * @return void
 	 */
-	
-	public function __construct() {
-		
-		$this->json_path = get_option('etc_json_settings', false);
-		
-		// theme name
-		$this->theme_name = $this->get_theme_name();
 
-		// theme slug
-		$this->theme_slug = 'theme_mods_' . $this->theme_name;
-		
-		// register json
+	public function __construct($fields=array()) {
+		$wp_default_fields = array(
+			'color' => 'WP_Customize_Color_Control',
+			'file' => 'WP_Customize_Upload_Control',
+			'image' => 'WP_Customize_Image_Control',
+		);
+
+		$this->fields = array_merge($fields, $wp_default_fields);
+		$this->json_path = get_option('etc_json_settings', false);
 		$this->settings = $this->settings_from_json(apply_filters('etc_json_file', $this->json_path));
+		$this->theme_slug = 'theme_mods_' . $this->get_theme_name();
 		
 		/**
 		 * Register action hook
@@ -75,11 +64,15 @@ class ETC_WP_Theme_Customizer_From_Json {
 		*/
 		// add_action( 'customize_preview_init', array( $this, 'customize_preview' ) );
 		
-		add_action('customize_register', array(
-			$this,
-			'register_customizer'
-		), 99, 1);
+		/*
+		This hook allows you define new Theme Customizer sections, settings, and controls.
+		*/
+		add_action('customize_register', array($this, 'register_customizer'), 99, 1);
 		
+		/*
+		This hook allows you to output custom-generated CSS so that your changes show up correctly on the live website.
+		*/
+		if($this->get_css_hook()) add_action('wp_head', $this->get_css_hook());
 	}
 	
 	/**
@@ -88,7 +81,7 @@ class ETC_WP_Theme_Customizer_From_Json {
 	 * @param  string $json_path
 	 * @return object
 	 */
-	
+
 	public static function get_theme_settings() {
 		$instance = new self;
 		return $instance->get_settings();
@@ -100,13 +93,20 @@ class ETC_WP_Theme_Customizer_From_Json {
 	 * @param  string $json_path
 	 * @return object
 	 */
-	
+
 	public function settings_from_json($json_path) {
 		
 		return json_decode(file_get_contents(($json_path && $this->json_exists($json_path)) ? $json_path : ETC_DEFAULT_JSON));
 		
 	}
 	
+	/**
+	 * Check file existence
+	 *
+	 * @param  string $json_path
+	 * @return boolean
+	 */
+
 	private function json_exists($json_path) {
 		if (filter_var($json_path, FILTER_VALIDATE_URL))
 			return @file_get_contents($json_path);
@@ -119,7 +119,7 @@ class ETC_WP_Theme_Customizer_From_Json {
 	 *
 	 * @return object
 	 */
-	
+
 	public function get_slug() {
 		
 		return $this->theme_slug;
@@ -131,7 +131,7 @@ class ETC_WP_Theme_Customizer_From_Json {
 	 *
 	 * @return object
 	 */
-	
+
 	public function get_settings() {
 		
 		return $this->settings;
@@ -143,7 +143,7 @@ class ETC_WP_Theme_Customizer_From_Json {
 	 *
 	 * @return object
 	 */
-	
+
 	public function get_default($setting) {
 
 		return $this->get_defaults($setting);
@@ -155,7 +155,7 @@ class ETC_WP_Theme_Customizer_From_Json {
 	 *
 	 * @return object
 	 */
-	
+
 	public function get_defaults($get=false) {
 		$defaults = array();
 		
@@ -178,9 +178,11 @@ class ETC_WP_Theme_Customizer_From_Json {
 	 *
 	 * @return void
 	 */
-	
+
 	public function register_customizer($wp_customize) {
 		$this->wp_customize = $wp_customize;
+
+		do_action('etc_customizer_before', $this->wp_customize);
 
 		// keep or remove Wordpress defaults customizers
 		// http://codex.wordpress.org/Theme_Customization_API
@@ -215,7 +217,7 @@ class ETC_WP_Theme_Customizer_From_Json {
 			endforeach;
 		endforeach;
 		
-		//do_action('etc_customizer_after', $this->wp_customize);
+		do_action('etc_customizer_after', $this->wp_customize);
 		
 	}
 	
@@ -236,6 +238,30 @@ class ETC_WP_Theme_Customizer_From_Json {
 		return apply_filters('etc_theme_name', $theme_name);
 		
 	}
+
+	/**
+	 * Get if type is wp default
+	 *
+	 * @return string
+	 */
+	
+	private function is_wp_default($type) {
+		
+		$wp_defaults = array(
+			'text',
+			'email',
+			'url',
+			'date',
+			'checkbox',
+			'radio',
+			'select',
+			'dropdown-pages',
+			'textarea'
+		);
+
+		return in_array($type, $wp_defaults) ? $type : false;	
+	}
+	
 	
 	
 	/**
@@ -269,7 +295,7 @@ class ETC_WP_Theme_Customizer_From_Json {
 	private function set_setting($settings) {
 		
 		$setting_arg               = array();
-		$setting_arg['capability'] = $this->settings->setting->capability;
+		$setting_arg['capability'] = $this->settings->general->capability;
 		$setting_arg               = $this->deploy_settings($setting_arg, $settings, array(
 			'label',
 			'choices'
@@ -307,14 +333,9 @@ class ETC_WP_Theme_Customizer_From_Json {
 			'type',
 			'target'
 		));
-		
-		if ('select' == $settings->type
-			|| 'radio' == $settings->type
-			|| 'checkbox' == $settings->type ) {
-			
+
+		if($this->is_wp_default($settings->type))
 			$setting_arg['type'] = $settings->type;
-			
-		}
 
 		return $setting_arg;
 		
@@ -402,76 +423,33 @@ class ETC_WP_Theme_Customizer_From_Json {
 	
 	private function add_control($section_name, $setting_name, $settings) {
 		
-		switch ($settings->type) {
-			
-			case 'color':
-				$this->wp_customize->add_control(new WP_Customize_Color_Control($this->wp_customize, $setting_name, $this->set_control($section_name, $setting_name, $settings)));
-				break;
-			
-			case 'image':
-				$this->wp_customize->add_control(new WP_Customize_Image_Control($this->wp_customize, $setting_name, $this->set_control($section_name, $setting_name, $settings)));
-				break;
-			
-			case 'date-picker':
-				$this->wp_customize->add_control(new Date_Picker_Custom_Control($this->wp_customize, $setting_name, $this->set_control($section_name, $setting_name, $settings)));
-				break;
-			
-			case 'layout-picker':
-				$this->wp_customize->add_control(new Layout_Picker_Custom_Control($this->wp_customize, $setting_name, $this->set_control($section_name, $setting_name, $settings)));
-				break;
-			
-			case 'category-dropdown':
-				$this->wp_customize->add_control(new Category_Dropdown_Custom_Control($this->wp_customize, $setting_name, $this->set_control($section_name, $setting_name, $settings)));
-				break;
-			
-			case 'google-font':
-				$this->wp_customize->add_control(new Google_Font_Dropdown_Custom_Control($this->wp_customize, $setting_name, $this->set_control($section_name, $setting_name, $settings)));
-				break;
-			
-			case 'menu-dropdown':
-				$this->wp_customize->add_control(new Menu_Dropdown_Custom_Control($this->wp_customize, $setting_name, $this->set_control($section_name, $setting_name, $settings)));
-				break;
-			
-			case 'post-dropdown':
-				$this->wp_customize->add_control(new Post_Dropdown_Custom_Control($this->wp_customize, $setting_name, $this->set_control($section_name, $setting_name, $settings)));
-				break;
-			
-			case 'post-type-dropdown':
-				$this->wp_customize->add_control(new Post_Type_Dropdown_Custom_Control($this->wp_customize, $setting_name, $this->set_control($section_name, $setting_name, $settings)));
-				break;
-			
-			case 'tags-dropdown':
-				$this->wp_customize->add_control(new Tags_Dropdown_Custom_Control($this->wp_customize, $setting_name, $this->set_control($section_name, $setting_name, $settings)));
-				break;
-			
-			case 'taxonomy-dropdown':
-				$this->wp_customize->add_control(new Taxonomy_Dropdown_Custom_Control($this->wp_customize, $setting_name, $this->set_control($section_name, $setting_name, $settings)));
-				break;
-			
-			case 'user-dropdown':
-				$this->wp_customize->add_control(new User_Dropdown_Custom_Control($this->wp_customize, $setting_name, $this->set_control($section_name, $setting_name, $settings)));
-				break;
-			
-			case 'text-editor':
-				$this->wp_customize->add_control(new Text_Editor_Custom_Control($this->wp_customize, $setting_name, $this->set_control($section_name, $setting_name, $settings)));
-				break;
-			
-			case 'textarea':
-				$this->wp_customize->add_control(new Textarea_Custom_Control($this->wp_customize, $setting_name, $this->set_control($section_name, $setting_name, $settings)));
-				break;
-			
-			case 'text':
-			case 'select':
-			case 'radio':
-			case 'checkbox':
-			case 'option':
-				$this->wp_customize->add_control($setting_name, $this->set_control($section_name, $setting_name, $settings));
-				break;
-				
-		}
+		// Defaults Wordpress types using simple control
+
+		if($this->is_wp_default($settings->type))
+			$this->wp_customize->add_control($setting_name, $this->set_control($section_name, $setting_name, $settings));
 		
+		// Types using special class
+
+		foreach ($this->fields as $field => $class) {
+			if ($field == $settings->type) {
+				$this->wp_customize->add_control(new $class($this->wp_customize, $setting_name, $this->set_control($section_name, $setting_name, $settings)));
+				break;
+			}
+		}
+
 		do_action('etc_register_control_type', $section_name, $setting_name, $settings);
 		
 	}
-	
+
+	/**
+	 * Get CSS hook if defined in JSON
+	 *
+	 * @return css_hook name or false
+	 */
+
+	public function get_css_hook() {
+
+		return isset($this->settings->general->css_hook) ? $this->settings->general->css_hook : false;
+
+	}
 }

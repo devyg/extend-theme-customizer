@@ -19,11 +19,15 @@ table.widefat{
 
 	<h2><?php _e( 'Setting item list', 'extend-theme-customizer' ); ?></h2>
 
-	<table class=" widefat">
+	<table class="widefat">
 		<tbody>
 			<tr>
 				<th><?php _e( 'Privileges available', 'extend-theme-customizer' ); ?></th>
-				<td><?php echo esc_html( $settings_object->setting->capability ); ?></td>
+				<td><?php echo esc_html( $settings_object->general->capability ); ?></td>
+			</tr>
+			<tr>
+				<th><?php _e( 'CSS Hook', 'extend-theme-customizer' ); ?></th>
+				<td><?php echo esc_html( isset($settings_object->general->css_hook) ? $settings_object->general->css_hook : 'Not defined' ); ?></td>
 			</tr>
 		</tbody>
 	</table>

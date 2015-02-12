@@ -7,14 +7,25 @@
 			"nav" : true,
 			"static_front_page": true
 	},
-	"setting": {
-		"capability": "edit_theme_options"
+	"general": {
+		"capability": "edit_theme_options",
+		"css_hook": "my_css_generate_function"
 	},
 	"sections": {
 		"colors": {
-			"title": "Couleurs (WP)",
+			"title": "Colors (WP)",
 			"priority": 0,
 			"setting": {
+				"topbar_text_color": {
+					"label": "Topbar text color",
+					"type": "color",
+					"default": "#000"
+				},
+				"topbar_bg_color": {
+					"label": "Topbar background color",
+					"type": "color",
+					"default": "#000"
+				},
 				"header_text_color": {
 					"label": "Header text color",
 					"type": "color",
@@ -24,13 +35,38 @@
 					"label": "Header background color",
 					"type": "color",
 					"default": "#000"
+				},
+				"footer_text_color": {
+					"label": "Footer text color",
+					"type": "color",
+					"default": "#000"
+				},
+				"footer_bg_color": {
+					"label": "Footer background color",
+					"type": "color",
+					"default": "#000"
 				}
 			}
 		},
-
-		"ci_header": {
+		"etc_topbar": {
+			"title": "Topbar",
+			"priority": 1,
+			"setting": {
+				"topbar_show_langs": {
+					"label": "Show langs selector",
+					"type": "checkbox",
+					"default": true
+				},
+				"topbar_show_search": {
+					"label": "Show search",
+					"type": "checkbox",
+					"default": true
+				}
+			}
+		},
+		"etc_header": {
 			"title": "Header",
-			"priority": 10,
+			"priority": 2,
 			"setting": {
 				"header_logo": {
 					"label": "Logo",
@@ -46,6 +82,38 @@
 					"label": "Show description",
 					"type": "checkbox",
 					"default": true
+				}
+			}
+		},
+		"etc_footer": {
+			"title": "Footer",
+			"priority": 3,
+			"setting": {
+				"gmap_in_footer": {
+					"label": "GMap",
+					"type": "checkbox",
+					"default": "true"
+				}
+			}
+		},
+		"etc_layout": {
+			"title": "Layout",
+			"priority": 4,
+			"setting": {
+				"topbar_show": {
+					"label": "Show Topbar",
+					"type": "checkbox",
+					"default": true
+				},
+				"home_layout": {
+					"default": "left",
+					"label": "Home layout",
+					"type": "layout-picker-3"
+				},
+				"inner_layout": {
+					"default": "right",
+					"label": "Page layout",
+					"type": "layout-picker-4"
 				}
 			}
 		},
@@ -89,12 +157,6 @@
 					"default": "",
 					"label": "メディア",
 					"type": "image"
-				},
-				"layout": {
-					"transport": "postMessage",
-					"default": "",
-					"label": "レイアウト",
-					"type": "layout-picker"
 				},
 				"date": {
 					"transport": "postMessage",
