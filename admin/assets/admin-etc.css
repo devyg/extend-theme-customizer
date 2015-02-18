@@ -1,0 +1,24 @@
+.wp-full-overlay.expanded {
+	margin-left: 450px;
+}
+
+.wp-full-overlay-sidebar {
+	width: 450px;
+}
+
+.etc-radio-img {
+	display: block;
+	width: 90%;
+	padding: 7px 5%;
+}
+	.etc-radio-img:hover {
+		background: #f0f0f0;
+	}
+
+	.etc-radio-img input[type="radio"] {
+		margin: 0 10px 0 0;
+	}
+
+	.etc-radio-img img {
+		vertical-align: middle;
+	}

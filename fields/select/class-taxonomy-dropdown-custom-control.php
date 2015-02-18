@@ -1,8 +1,6 @@
 <?php
-
-if ( ! class_exists( 'WP_Customize_Control' ) ){
+if ( !class_exists( 'WP_Customize_Control' ) )
 	return NULL;
-}
 
 class Taxonomy_Dropdown_Custom_Control extends WP_Customize_Control
 {

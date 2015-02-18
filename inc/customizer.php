@@ -41,14 +41,15 @@ class ETC_Theme_Customizer {
 		// Require Fields File
 		$this->support_fields = array(
 			'date' => array(
-				'date-picker' => 'Date_Picker_Custom_Control'
+				'date-picker' => 'Date_Picker_Custom_Control',
 			),
 			'image' => array(
-				'multi-image' => 'Multi_Image_Custom_Control'
+				'multi-image' => 'Multi_Image_Custom_Control',
 			),
 			'layout' => array(
-				'layout-picker-3' => 'Layout_Picker_Three_Custom_Control',
-				'layout-picker-4' => 'Layout_Picker_Four_Custom_Control'
+				'layout-picker-4' => 'Layout_Picker_Four_Custom_Control',
+				'layout-picker-header' => 'Layout_Picker_Header_Custom_Control',
+				'layout-picker-width' => 'Layout_Picker_Width_Custom_Control',
 			),
 			'select' => array(
 				'category-dropdown' => 'Category_Dropdown_Custom_Control',
@@ -58,11 +59,14 @@ class ETC_Theme_Customizer {
 				'post-type-dropdown' => 'Post_Type_Dropdown_Custom_Control',
 				'tags-dropdown' => 'Tags_Dropdown_Custom_Control',
 				'taxonomy-dropdown' => 'Taxonomy_Dropdown_Custom_Control',
-				'user-dropdown' => 'User_Dropdown_Custom_Control'
+				'user-dropdown' => 'User_Dropdown_Custom_Control',
 			),
 			'text' => array(
 				'text-editor' => 'Text_Editor_Custom_Control',
-			)
+			),
+			'radio' => array(
+				'radio-image' => 'Radio_Image_Custom_Control',
+			),
 		);
 		
 		$this->support_fields = apply_filters('etc_support_files', $this->support_fields);
@@ -75,6 +79,9 @@ class ETC_Theme_Customizer {
 		
 		// Runs after WordPress has finished loading but before any headers are sent.
 		add_action('init', array( $this, 'initialize_customizer' ));
+
+		// Enqueue admin scripts
+		add_action('admin_enqueue_scripts', array($this, 'add_admin_assets'));
 		
 	}
 	
@@ -144,6 +151,16 @@ class ETC_Theme_Customizer {
 		// Init customizer
 		$this->customizer  = new ETC_WP_Theme_Customizer_From_Json($this->get_fields());
 	
+	}
+
+	/**
+	 * Add custom CSS to admin
+	 *
+	 * @return nothing
+	 */
+
+	public function add_admin_assets() {
+		wp_enqueue_style('admin-etc', plugins_url( 'admin/assets/admin-etc.css', ETC_BASE_FILE ));
 	}
 
 }

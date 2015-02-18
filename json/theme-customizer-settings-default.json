@@ -1,11 +1,11 @@
 {
 	"wp_defaults": {
-			"title_tagline" : true,
-			"colors" : true,
-			"header_image" : true,
-			"background_image" : true,
-			"nav" : true,
-			"static_front_page": true
+		"title_tagline" : true,
+		"colors" : true,
+		"header_image" : true,
+		"background_image" : true,
+		"nav" : true,
+		"static_front_page": true
 	},
 	"general": {
 		"capability": "edit_theme_options",
@@ -14,7 +14,7 @@
 	"sections": {
 		"colors": {
 			"title": "Colors (WP)",
-			"priority": 0,
+			"priority": 10,
 			"setting": {
 				"topbar_text_color": {
 					"label": "Topbar text color",
@@ -50,7 +50,7 @@
 		},
 		"etc_topbar": {
 			"title": "Topbar",
-			"priority": 1,
+			"priority": 20,
 			"setting": {
 				"topbar_show_langs": {
 					"label": "Show langs selector",
@@ -66,7 +66,7 @@
 		},
 		"etc_header": {
 			"title": "Header",
-			"priority": 2,
+			"priority": 30,
 			"setting": {
 				"header_logo": {
 					"label": "Logo",
@@ -87,18 +87,23 @@
 		},
 		"etc_footer": {
 			"title": "Footer",
-			"priority": 3,
+			"priority": 40,
 			"setting": {
 				"gmap_in_footer": {
 					"label": "GMap",
 					"type": "checkbox",
 					"default": "true"
+				},
+				"copy_date": {
+					"default": "2015",
+					"label": "Date copyright",
+					"type": "number"
 				}
 			}
 		},
 		"etc_layout": {
 			"title": "Layout",
-			"priority": 4,
+			"priority": 50,
 			"setting": {
 				"topbar_show": {
 					"label": "Show Topbar",
@@ -118,62 +123,27 @@
 			}
 		},
 
-		"gg_general_settings": {
-			"title": "General",
-			"priority": 10,
+		"etc_analytics": {
+			"title": "Analytics",
+			"priority": 60,
 			"setting": {
-				"general_keywords": {
+				"g_analytics_ua": {
 					"transport": "postMessage",
 					"default": "",
-					"label": "通常のテキスト",
-					"type": "option"
-				},
-				"general_analytics_code": {
-					"transport": "postMessage",
-					"default": "",
-					"label": "テキストエリア",
-					"type": "textarea"
-				},
-				"general_user_select": {
-					"transport": "postMessage",
-					"default": "",
-					"label": "テキストエディター",
-					"type": "text-editor"
+					"label": "Google Analytics UA code",
+					"type": "text"
 				}
 			}
 		},
-		"picker_settings": {
-			"title": "ピッカー",
-			"priority": 30,
-			"setting": {
-				"colorpicker": {
-					"transport": "postMessage",
-					"default": "",
-					"label": "カラーピッカー",
-					"type": "color"
-				},
-				"image": {
-					"transport": "postMessage",
-					"default": "",
-					"label": "メディア",
-					"type": "image"
-				},
-				"date": {
-					"transport": "postMessage",
-					"default": "",
-					"label": "日付",
-					"type": "date-picker"
-				}
-			}
-		},
+
 		"select_settings": {
-			"title": "セレクトボックス",
-			"priority": 30,
+			"title": "Other settings",
+			"priority": 70,
 			"setting": {
 				"category": {
 					"transport": "postMessage",
 					"default": "",
-					"label": "カテゴリー",
+					"label": "Categories",
 					"type": "category-dropdown"
 				},
 				"google_font": {
@@ -185,31 +155,31 @@
 				"menu_dropdown": {
 					"transport": "postMessage",
 					"default": "",
-					"label": "メニュー選択",
+					"label": "Menus",
 					"type": "menu-dropdown"
 				},
 				"post_dropdown": {
 					"transport": "postMessage",
 					"default": "",
-					"label": "投稿選択",
+					"label": "Posts",
 					"type": "post-dropdown"
 				},
 				"post_type_dropdown": {
 					"transport": "postMessage",
 					"default": "",
-					"label": "投稿選択",
+					"label": "Posts types",
 					"type": "post-type-dropdown"
 				},
 				"taxonomy_dropdown": {
 					"transport": "postMessage",
 					"default": "",
-					"label": "投稿タイプ",
+					"label": "Tags",
 					"type": "taxonomy-dropdown"
 				},
 				"user_dropdown": {
 					"transport": "postMessage",
 					"default": "",
-					"label": "ユーザー",
+					"label": "Users",
 					"type": "user-dropdown"
 				}
 			}

@@ -1,11 +1,10 @@
 <?php
-if ( ! class_exists( 'WP_Customize_Control' ) ) {
-  return NULL;
-}
+if ( !class_exists( 'WP_Customize_Control' ) )
+	return NULL;
 
 /**
-* A class to create a dropdown for all google fonts
-*/
+ * A class to create a dropdown for all google fonts
+ */
 class Google_Font_Dropdown_Custom_Control extends WP_Customize_Control
 {
 	private $fonts = false;
@@ -31,6 +30,7 @@ class Google_Font_Dropdown_Custom_Control extends WP_Customize_Control
 			<span class="customize-control-title"><?php echo esc_html( $this->label ); ?></span>
 			<select <?php $this->link(); ?>>
 			<?php
+			printf( '<option value="" %s></option>', selected( $this->value(), $k, false ) );
 			foreach ( $this->fonts as $k => $v ) {
 				printf( '<option value="%s" %s>%s</option>', $k, selected( $this->value(), $k, false ), $v->family );
 			}

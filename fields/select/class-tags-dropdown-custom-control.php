@@ -1,7 +1,7 @@
 <?php
-if ( ! class_exists( 'WP_Customize_Control' ) ){
+if ( !class_exists( 'WP_Customize_Control' ) )
 	return NULL;
-}
+
 /**
  * Class to create a custom tags control
  */

@@ -70,7 +70,12 @@ class ETC_WP_Theme_Customizer_From_Json {
 		add_action('customize_register', array($this, 'register_customizer'), 99, 1);
 		
 		/*
-		This hook allows you to output custom-generated CSS so that your changes show up correctly on the live website.
+		This hook to output automated CSS generation.
+		*/
+		add_action('wp_head', array($this, 'generate_css'));
+
+		/*
+		This hook allows you to output custom-generated CSS.
 		*/
 		if($this->get_css_hook()) add_action('wp_head', $this->get_css_hook());
 	}
@@ -162,15 +167,14 @@ class ETC_WP_Theme_Customizer_From_Json {
 		foreach ( $this->settings->sections as $section_key => $settings ) :
 			foreach ( $settings->setting as $setting_key => $setting ):
 				if ($get && $setting_key == $get):
-					return $setting->default ? $setting->default : false;
+					return $setting->default ? $setting->default : '';
 				else:
 					$defaults[$setting_key] = $setting->default;
 				endif;
 			endforeach;
 		endforeach;
 
-		return $get ? false : $defaults;
-		
+		return $get ? '' : $defaults;
 	}
 	
 	/**
@@ -252,6 +256,7 @@ class ETC_WP_Theme_Customizer_From_Json {
 			'email',
 			'url',
 			'date',
+			'number',
 			'checkbox',
 			'radio',
 			'select',
@@ -274,12 +279,9 @@ class ETC_WP_Theme_Customizer_From_Json {
 	
 	private function set_section($title = '', $priority) {
 		
-		if (!$priority)
-			$priority = 0;
-		
 		return array(
 			'title' => $title,
-			'priority' => $priority
+			'priority' => (!$priority) ? 0 : $priority
 		);
 		
 	}
@@ -439,6 +441,32 @@ class ETC_WP_Theme_Customizer_From_Json {
 
 		do_action('etc_register_control_type', $section_name, $setting_name, $settings);
 		
+	}
+
+	/**
+	 * Generate CSS if generate option found in each settings declared in JSON
+	 *
+	 * @return nothing
+	 */
+
+	public function generate_css() {
+
+		echo '<style type="text/css">';
+		
+		foreach ( $this->settings->sections as $section_key => $settings ) :
+			foreach ( $settings->setting as $setting_key => $setting ):
+				if(isset($setting->generate)):
+					echo $setting->generate->element . '{'
+						. $setting->generate->property . ':'
+						. etc_get($setting_key)
+						. (isset($setting->generate->units) ? $setting->generate->units : '')
+						. '}';
+				endif;
+			endforeach;
+		endforeach;
+
+		echo '</style>';
+
 	}
 
 	/**

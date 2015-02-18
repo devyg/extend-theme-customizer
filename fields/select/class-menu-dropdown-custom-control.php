@@ -1,7 +1,6 @@
 <?php
-if ( ! class_exists( 'WP_Customize_Control' ) ){
-  return NULL;
-}
+if ( !class_exists( 'WP_Customize_Control' ) )
+	return NULL;
 
 /**
  * Class to create a custom menu control

@@ -3,7 +3,7 @@
 ## Installation
 
 ```
-git clone https://github.com/devyg/extend-theme-customizer.git extend-theme-customizer
+git clone https://github.com/devyg/the-extend-theme-customizer.git extend-theme-customizer
 ```
 
 ## Usage

@@ -24,7 +24,7 @@ class ETC_Admin {
 
 	private function __construct() {
 		
-		$plugin            = ETC_Theme_Customizer::get_instance();
+		$plugin = ETC_Theme_Customizer::get_instance();
 		$this->plugin_slug = $plugin->get_plugin_slug();
 		
 		add_action('admin_menu', array(
@@ -55,6 +55,7 @@ class ETC_Admin {
 	 *
 	 * @return object
 	 */
+
 	public static function get_instance() {
 		if (null == self::$instance) {
 			self::$instance = new self;
@@ -87,6 +88,7 @@ class ETC_Admin {
 	 *
 	 * @return    null    Return early if no settings page is registered.
 	 */
+
 	public function enqueue_admin_scripts() {
 		
 		if (!isset($this->plugin_screen_hook_suffix)) {
@@ -108,6 +110,7 @@ class ETC_Admin {
 	 *
 	 * @since    1.0.0
 	 */
+
 	public function add_plugin_admin_menu() {
 		
 		$this->plugin_screen_hook_suffix = add_options_page(__('Extends Theme Customizer', $this->plugin_slug), __('ETC Settings', $this->plugin_slug), 'manage_options', $this->plugin_slug, array(
@@ -122,6 +125,7 @@ class ETC_Admin {
 	 *
 	 * @since    1.0.0
 	 */
+
 	public function display_plugin_admin_page() {
 		
 		$create_nonce    = wp_create_nonce(plugin_basename(__file__));
@@ -138,6 +142,7 @@ class ETC_Admin {
 	 * @param array $links
 	 * @return array
 	 */
+
 	public function add_action_links($links) {
 		
 		return array_merge(array(
@@ -151,19 +156,17 @@ class ETC_Admin {
 	 *
 	 * @return boolean
 	 */
+
 	public function etc_admin_update_option() {
 		
-		$json_file_path = $_POST && $_POST['etc_json_file'] ? $_POST['etc_json_file'] : '';
-		$nonce          = $_POST && $_POST['_wp_nonce'] ? $_POST['_wp_nonce'] : '';
+		$json_file_path = ($_POST && array_key_exists('etc_json_file', $_POST)) ? $_POST['etc_json_file'] : '';
+		$nonce          = ($_POST && array_key_exists('_wp_nonce', $_POST)) ? $_POST['_wp_nonce'] : '';
 		
 		if (wp_verify_nonce($nonce, plugin_basename(__file__)) !== 1) {
 			return false;
 		}
 		
-		$json_contents = $json_file_path;
-		
-		$success = update_option('etc_json_settings', $json_contents);
-		return $success;
+		return update_option('etc_json_settings', $json_file_path);
 		
 	}
 	
@@ -172,6 +175,7 @@ class ETC_Admin {
 	 *
 	 * @return boolean
 	 */
+
 	public function etc_admin_add_option() {
 		
 		$success   = false;

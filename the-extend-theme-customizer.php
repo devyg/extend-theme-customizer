@@ -2,7 +2,7 @@
 /*
 Plugin Name: The Extend Theme Customizer
 Plugin URI: https://github.com/devyg/extend-theme-customizer
-Description: Extend Theme Customizer with a JSON file
+Description: Extend Wordpress Theme Customizer with a JSON file
 Version: 1.1
 Author: Devyg
 Author URI: http://devyg.com/
@@ -14,11 +14,12 @@ if (!defined('WPINC'))
 	exit;
 
 /**
- * defined Base Dir
+ * Some globals
  */
 
 define( 'ETC_VERSION', '1.1');
 define( 'ETC_BASE_DIR', dirname( __FILE__ ) );
+define( 'ETC_BASE_FILE', __FILE__ );
 define( 'ETC_DEFAULT_JSON', dirname( __FILE__ ) . '/json/theme-customizer-settings-default.json');
 
 
@@ -58,7 +59,6 @@ if ( is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
   require_once( plugin_dir_path( __FILE__ ) . 'admin/admin.php' );
 
   add_action( 'plugins_loaded', array( 'ETC_Admin', 'get_instance' ) );
-
 }
 
 /**
@@ -66,37 +66,46 @@ if ( is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
  * @since 1.1
  */
 
+if ( ! function_exists( 'etc_get_default' ) ) :
 function etc_get_default($setting) {
 	$etc = ETC_Theme_Customizer::get_instance();
 	return $etc->get_customizer()->get_default($setting);
 }
+endif;
 
 /**
  * Echo a default value
  * @since 1.1
  */
 
+if ( ! function_exists( 'etc_echo_default' ) ) :
 function etc_echo_default($setting) {
 	echo esc_html(etc_get_default($setting));
 }
+endif;
 
 /**
  * Get a setting value
  * @since 1.1
  */
 
+if ( ! function_exists( 'etc_get' ) ) :
 function etc_get($setting) {
 	$etc = ETC_Theme_Customizer::get_instance();
 	$options = get_option($etc->get_customizer()->get_slug(), $etc->get_customizer()->get_defaults());
 
 	return array_key_exists($setting, $options) ? $options[$setting] : etc_get_default($setting);
 }
+endif;
 
 /**
  * Echo a setting value
  * @since 1.1
  */
 
+if ( ! function_exists( 'etc_echo' ) ) :
 function etc_echo($setting) {
 	echo esc_html(etc_get($setting));
 }
+endif;
+
