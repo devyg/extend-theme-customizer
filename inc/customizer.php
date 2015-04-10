@@ -78,7 +78,8 @@ class ETC_Theme_Customizer {
 		}
 		
 		// Runs after WordPress has finished loading but before any headers are sent.
-		add_action('init', array( $this, 'initialize_customizer' ));
+		//add_action('init', array( $this, 'initialize_customizer' ));
+		$this->initialize_customizer();
 
 		// Enqueue admin scripts
 		add_action('admin_enqueue_scripts', array($this, 'add_admin_assets'));

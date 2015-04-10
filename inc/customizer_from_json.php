@@ -101,8 +101,17 @@ class ETC_WP_Theme_Customizer_From_Json {
 
 	public function settings_from_json($json_path) {
 		
-		return json_decode(file_get_contents(($json_path && $this->json_exists($json_path)) ? $json_path : ETC_DEFAULT_JSON));
-		
+		$json_file = ($json_path && $this->json_exists($json_path)) ? $json_path : ETC_DEFAULT_JSON;
+		if(!$json_file) {
+			wp_die(__('The Extend Theme Customizer Error :<br>The JSON file is missing (even the default one!).', 'extend-theme-customizer')); 
+		}
+
+		$json_obj = json_decode(file_get_contents($json_file));
+		if(!$json_obj) {
+			wp_die(__('The Extend Theme Customizer Error :<br>The JSON file <code>' . $json_file . '</code> could not be decoded.', 'extend-theme-customizer')); 
+		}
+
+		return $json_obj;
 	}
 	
 	/**
